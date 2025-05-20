@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: Birthday
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521/XEPDB1
+    username: keshav_user
+    password: keshav_pass
+    driver-class-name: oracle.jdbc.OracleDriver
+
+server:
+  port: 8081
