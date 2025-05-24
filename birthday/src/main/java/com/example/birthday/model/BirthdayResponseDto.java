@@ -3,7 +3,7 @@ package com.example.birthday.model;
 import lombok.Data;
 
 @Data
-public class BirthdayDto {
+public class BirthdayResponseDto {
 
     private String id;
     private String name;
