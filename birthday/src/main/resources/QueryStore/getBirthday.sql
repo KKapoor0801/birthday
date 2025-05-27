@@ -1,5 +1,8 @@
-select name as name,
-       bday_dt as dateOfBirth,
-       email_addr as emailAddress
-from keshav_user.bday_dtls
-where trunc(bday_dt) = to_date(:birthdayDate, 'DD-MM-YY')
+SELECT
+       ID as id,
+       NAME AS name,
+       BDAY_DT AS dateOfBirth,
+       CRE_DT as createdDate,
+       EMAIL_ADDR AS emailAddress
+FROM KESHAV_USER.BDAY_DTLS
+WHERE TRUNC(BDAY_DT) = TO_DATE(:birthdayDate, 'DD-MM-YYYY')

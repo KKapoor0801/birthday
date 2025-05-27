@@ -1,6 +1,6 @@
 package com.example.birthday.repository;
 
-import com.example.birthday.model.BirthdayResponseDto;
+import com.example.birthday.model.BirthdayDto;
 import com.example.birthday.util.QueryManager;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +14,7 @@ import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 @Slf4j
@@ -34,11 +35,11 @@ public class BirthdayRepository {
     }
 
     @Transactional
-    public List<BirthdayResponseDto> getBirthday(final String traceId, final String birthdayDate) throws Exception{
-        List<BirthdayResponseDto> birthdayResponse;
+    public List<BirthdayDto> getBirthday(final String traceId, final String birthdayDate) throws Exception{
+        List<BirthdayDto> birthdayResponse;
         try {
             log.info("traceId = {} | BirthdayRepository | Fetching birthday data", traceId);
-            RowMapper<BirthdayResponseDto> rowMapper = new BeanPropertyRowMapper<>(BirthdayResponseDto.class);
+            RowMapper<BirthdayDto> rowMapper = new BeanPropertyRowMapper<>(BirthdayDto.class);
             MapSqlParameterSource params = new MapSqlParameterSource();
             params.addValue("birthdayDate",birthdayDate);
             birthdayResponse = namedParameterJdbcTemplate.query(QueryManager.getSql(QueryManager.getBirthday),params, rowMapper);
@@ -53,6 +54,26 @@ public class BirthdayRepository {
         }
     }
 
-
+    @Transactional
+    public String insertBirthday(final String traceId, final BirthdayDto birthdayDto, final String dateOfBirthString) throws Exception {
+        String response = "Failure";
+        try {
+            log.info("traceId = {} | BirthdayRepository | insertBirthday | Inserting birthday data", traceId);
+            MapSqlParameterSource params = new MapSqlParameterSource();
+            params.addValue("id", UUID.randomUUID().toString());
+            params.addValue("name", birthdayDto.getName());
+            params.addValue("birthdayDate", dateOfBirthString);
+            params.addValue("emailAddress", birthdayDto.getEmailAddress());
+            int queryResult = namedParameterJdbcTemplate.update(QueryManager.getSql(QueryManager.insertBirthday), params);
+            if(queryResult > 0) {
+                response = "Successfully Inserted Birthday Data";
+                log.info("traceId = {} | BirthdayRepository | insertBirthday | Birthday data inserted successfully",traceId);
+                return response;
+            }
+        } catch (Exception e) {
+            log.error("traceId = {} | BirthdayRepository | insertBirthday | Error inserting birthday data: {}", traceId, e.getLocalizedMessage());
+        }
+        return response;
+    }
 
 }
