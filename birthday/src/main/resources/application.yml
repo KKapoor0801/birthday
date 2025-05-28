@@ -10,6 +10,19 @@ spring:
     user:
       name: user
       password: mypassword
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: keshav.kapoor0801@gmail.com
+    password: kqohjdkevggydkdb
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            trust: smtp.gmail.com
+          starttls:
+              enable: true
 
 server:
   port: 8081

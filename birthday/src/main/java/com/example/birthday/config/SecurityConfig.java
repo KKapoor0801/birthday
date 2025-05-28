@@ -15,7 +15,7 @@ public class SecurityConfig {
         http
                 .csrf().disable() // disable CSRF for non-browser clients
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/birthday/insertBirthday").authenticated() // secure this
+                .requestMatchers("/api/v1/birthday/**").authenticated() // secure this
                 .anyRequest().permitAll()
                 .and()
                 .httpBasic(); // enable Basic Auth

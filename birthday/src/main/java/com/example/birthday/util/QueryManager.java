@@ -11,7 +11,7 @@ public class QueryManager {
 
     public static final String BASE_PATH = "QueryStore/";
     public static final String pingDB = "/pingDB.sql";
-    public static final String getBirthday = "/getBirthday.sql";
+    public static final String getBirthdayAndSendEmail = "/getBirthdayAndSendEmail.sql";
     public static final String insertBirthday = "/insertBirthday.sql";
 
     public static String getSql(String fileName) throws IOException {

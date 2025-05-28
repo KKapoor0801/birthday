@@ -39,15 +39,15 @@ public class BirthdayController {
     }
 
 
-    @GetMapping("/getBirthday")
-    public List<BirthdayDto> getBirthday(@RequestHeader String traceId, @RequestBody BirthdayRequestDto birthdayRequestDto) throws Exception {
-        log.info("traceId = {} | BirthdayController | getBirthday | Birthday endpoint called", traceId);
+    @GetMapping("/getBirthdayAndSendEmail")
+    public List<BirthdayDto> getBirthdayAndSendEmail(@RequestHeader String traceId, @RequestBody BirthdayRequestDto birthdayRequestDto) throws Exception {
+        log.info("traceId = {} | BirthdayController | getBirthdayAndSendEmail | Birthday endpoint called", traceId);
         List<BirthdayDto> response = new ArrayList<>();
         if (!ObjectUtils.isEmpty(birthdayRequestDto) && !ObjectUtils.isEmpty(birthdayRequestDto.getBirthdayDate())) {
-            response = birthdayService.getBirthday(traceId, birthdayRequestDto.getBirthdayDate());
-            log.info("traceId = {} | BirthdayController | getBirthday | Birthday data fetched successfully for date: {}", traceId, response);
+            response = birthdayService.getBirthdayAndSendEmail(traceId, birthdayRequestDto.getBirthdayDate());
+            log.info("traceId = {} | BirthdayController | getBirthdayAndSendEmail | Birthday data fetched successfully for date: {}", traceId, response);
         } else {
-            log.error("traceId = {} | BirthdayController | getBirthday | Invalid Date Provided: {}", traceId, birthdayRequestDto.getBirthdayDate());
+            log.error("traceId = {} | BirthdayController | getBirthdayAndSendEmail | Invalid Date Provided: {}", traceId, birthdayRequestDto.getBirthdayDate());
         }
         return response;
     }

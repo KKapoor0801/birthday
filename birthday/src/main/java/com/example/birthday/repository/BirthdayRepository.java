@@ -25,31 +25,32 @@ public class BirthdayRepository {
 
     @Transactional
     public String pingDB(final String traceId) throws Exception {
+        log.info("traceId = {} | BirthdayRepository | pingDB | Pinging database", traceId);
         try {
             MapSqlParameterSource params = new MapSqlParameterSource();
             return namedParameterJdbcTemplate.queryForObject(QueryManager.getSql(QueryManager.pingDB), params, String.class);
         } catch (Exception e) {
-            log.error("traceId = {} | BirthdayRepository | Error pinging database: {}", traceId, e.getMessage());
+            log.error("traceId = {} | BirthdayRepository | pingDB | Error pinging database: {}", traceId, e.getMessage());
             throw new Exception("Error pinging database", e);
         }
     }
 
     @Transactional
-    public List<BirthdayDto> getBirthday(final String traceId, final String birthdayDate) throws Exception{
+    public List<BirthdayDto> getBirthdayAndSendEmail(final String traceId, final String dayOfMonth) throws Exception{
         List<BirthdayDto> birthdayResponse;
         try {
-            log.info("traceId = {} | BirthdayRepository | Fetching birthday data", traceId);
+            log.info("traceId = {} | BirthdayRepository | getBirthdayAndSendEmail | Fetching birthday data", traceId);
             RowMapper<BirthdayDto> rowMapper = new BeanPropertyRowMapper<>(BirthdayDto.class);
             MapSqlParameterSource params = new MapSqlParameterSource();
-            params.addValue("birthdayDate",birthdayDate);
-            birthdayResponse = namedParameterJdbcTemplate.query(QueryManager.getSql(QueryManager.getBirthday),params, rowMapper);
+            params.addValue("dayOfMonth",dayOfMonth);
+            birthdayResponse = namedParameterJdbcTemplate.query(QueryManager.getSql(QueryManager.getBirthdayAndSendEmail),params, rowMapper);
             if (ObjectUtils.isEmpty(birthdayResponse)) {
-                log.info("traceId = {} | BirthdayRepository | No birthday data found for date: {}", traceId, birthdayDate);
+                log.info("traceId = {} | BirthdayRepository | getBirthdayAndSendEmail | No birthday data found for date: {}", traceId, dayOfMonth);
                 return new ArrayList<>();
             }
             return birthdayResponse;
         } catch (Exception e) {
-            log.error("traceId = {} | BirthdayRepository | Error fetching birthday data: {}", traceId, e.getMessage());
+            log.error("traceId = {} | BirthdayRepository | getBirthdayAndSendEmail | Error fetching birthday data: {}", traceId, e.getMessage());
             throw new Exception("Error fetching birthday data", e);
         }
     }
