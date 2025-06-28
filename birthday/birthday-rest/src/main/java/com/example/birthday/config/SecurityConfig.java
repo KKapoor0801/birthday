@@ -13,13 +13,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable() // disable CSRF for non-browser clients
-                .authorizeHttpRequests()
-                .requestMatchers("/api/v1/birthday/**").authenticated() // secure this
-                .anyRequest().permitAll()
-                .and()
-                .httpBasic(); // enable Basic Auth
-
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/v1/birthday/**").permitAll()
+                        .anyRequest().authenticated()
+                );
         return http.build();
     }
 }

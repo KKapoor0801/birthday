@@ -33,7 +33,7 @@ public class BirthdayService {
         log.info("traceId = {} | BirthdayService | getBirthdayAndSendEmail | Fetching birthday data", traceId);
         List<BirthdayDto> birthdayResponse = new ArrayList<>();
         String regex = "^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\\d{4}$"; //To check if a date string is in DD-MM-YY format
-        if(birthdayDate.matches(regex)) {
+        if (birthdayDate.matches(regex)) {
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             sdf.setTimeZone(TimeZone.getTimeZone("UTC")); // Set timezone to UTC
             Date date = sdf.parse(birthdayDate);
@@ -42,7 +42,7 @@ public class BirthdayService {
             for (BirthdayDto birthdayDto : birthdayResponse) {
                 if (!ObjectUtils.isEmpty(birthdayDto) && !ObjectUtils.isEmpty(birthdayDto.getName()) && !ObjectUtils.isEmpty(birthdayDto.getEmailAddress())) {
                     birthdayDto.setDateOfBirth(date);
-                    sendEmail(traceId,birthdayDto);
+                    sendEmail(traceId, birthdayDto);
                 } else {
                     log.info("traceId = {} | BirthdayService | getBirthdayAndSendEmail | No birthday data found for date: {}", traceId, birthdayDate);
                 }
@@ -72,7 +72,7 @@ public class BirthdayService {
     }
 
     public void sendEmail(final String traceId, final BirthdayDto birthdayResponse) throws Exception {
-        log.info("traceId = {} | BirthdayService | sendEmail | Sending birthday email notifications",traceId);
+        log.info("traceId = {} | BirthdayService | sendEmail | Sending birthday email notifications", traceId);
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         log.info("traceId = {} | BirthdayService | sendEmail | Sending email to: {}", traceId, birthdayResponse.getEmailAddress());
         mailMessage.setTo(birthdayResponse.getEmailAddress());

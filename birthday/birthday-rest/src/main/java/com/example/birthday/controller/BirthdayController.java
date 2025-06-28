@@ -1,7 +1,8 @@
 package com.example.birthday.controller;
 
-import com.example.birthday.model.BirthdayRequestDto;
 import com.example.birthday.model.BirthdayDto;
+import com.example.birthday.model.BirthdayRequestDto;
+import com.example.birthday.model.InsertBirthdayResponse;
 import com.example.birthday.repository.BirthdayRepository;
 import com.example.birthday.service.BirthdayService;
 import lombok.extern.slf4j.Slf4j;
@@ -13,10 +14,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@CrossOrigin()
 @RestController
-@Slf4j
 @RequestMapping("/api/v1/birthday")
+@Slf4j
 public class BirthdayController {
 
     @Autowired
@@ -24,6 +25,7 @@ public class BirthdayController {
 
     @Autowired
     private BirthdayService birthdayService;
+
 
     @GetMapping("/pingDB")
     public ResponseEntity<String> pingDB(@RequestHeader String traceId) throws Exception {
@@ -53,20 +55,24 @@ public class BirthdayController {
     }
 
     @PostMapping("/insertBirthday")
-    public ResponseEntity<String> insertBirthday(@RequestHeader String traceId, @RequestBody BirthdayDto birthdayDto) throws Exception {
+    public ResponseEntity<InsertBirthdayResponse> insertBirthday(@RequestHeader String traceId, @RequestBody BirthdayDto birthdayDto) throws Exception {
         log.info("traceId = {} | BirthdayController | insertBirthday | Insert Birthday endpoint called", traceId);
+        InsertBirthdayResponse insertBirthdayResponse = new InsertBirthdayResponse();
         String response;
         if (!ObjectUtils.isEmpty(birthdayDto) && !ObjectUtils.isEmpty(birthdayDto.getDateOfBirth())
-                && !ObjectUtils.isEmpty(birthdayDto.getName()) && !ObjectUtils.isEmpty(birthdayDto.getEmailAddress())){
+                && !ObjectUtils.isEmpty(birthdayDto.getName()) && !ObjectUtils.isEmpty(birthdayDto.getEmailAddress())) {
             response = birthdayService.insertBirthday(traceId, birthdayDto);
+            insertBirthdayResponse.setMessage(response);
         } else {
             log.error("traceId = {} | BirthdayController | insertBirthday | Invalid request body: {}", traceId, birthdayDto);
-            return ResponseEntity.badRequest().body("Invalid request body");
+            insertBirthdayResponse.setMessage("Invalid request body");
+            return ResponseEntity.badRequest().body(insertBirthdayResponse);
         }
-        if(!ObjectUtils.isEmpty(response) && !response.equals("Failure")) {
-            return ResponseEntity.ok(response);
+        if (!ObjectUtils.isEmpty(response) && !response.equals("Failure")) {
+            return ResponseEntity.ok(insertBirthdayResponse);
         } else {
-            return ResponseEntity.internalServerError().body("Failed to insert birthday data");
+            insertBirthdayResponse.setMessage("Failed to insert birthday data");
+            return ResponseEntity.internalServerError().body(insertBirthdayResponse);
         }
     }
 }
